@@ -1,10 +1,12 @@
 package com.example.runner;
 
+import android.R.color;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
@@ -16,18 +18,18 @@ import android.view.SurfaceView;
 public class GameView extends SurfaceView 
 implements SurfaceHolder.Callback{
 
-	private int screenW = 1;
-	private int screnH = 1;
+	private static int SCREEN_WIDTH;
+	private static int SCREEN_HEIGHT;
 	private boolean onTitle = true;
 	private GameThread thread;
 	private static final String TAG = "GameView";
+	private Actor actor; 
 	
 	public GameView(Context context) {
 		super(context);
 		getHolder().addCallback(this);
 		
 		thread = new GameThread(getHolder(), this);
-		
 		setFocusable(true);
 	}
 	
@@ -46,7 +48,10 @@ implements SurfaceHolder.Callback{
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
 			int height) {
 		// TODO Auto-generated method stub
-		
+		SCREEN_HEIGHT = height;
+		SCREEN_WIDTH = width;
+		Log.d(TAG, "Width: " + SCREEN_WIDTH +", Height: " + SCREEN_HEIGHT);
+		actor = new Actor(BitmapFactory.decodeResource(getResources(), R.drawable.red_blob));
 	}
 
 	@Override
@@ -75,7 +80,12 @@ implements SurfaceHolder.Callback{
 		return super.onTouchEvent(event);
 	}
 	
-	protected void onDraw(Canvas canvas){
-		canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.red_blob), 50,50, null);
+	protected void update(){
+		actor.update();
+	}
+	
+	protected void render(Canvas canvas){
+		canvas.drawColor(Color.BLACK);
+		actor.render(canvas);
 	}
 }

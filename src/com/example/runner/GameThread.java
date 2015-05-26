@@ -26,12 +26,28 @@ class GameThread extends Thread{
 	
 	@Override
 	public void run(){
+		Canvas canvas;
 		long tickCount = 0L;
 		Log.d(TAG, "Starting game loop");
 		while(running){
+			Log.d(TAG, "Started game loop");
+			canvas = null;
+			try{
+				canvas = this.surfaceHolder.lockCanvas();
+				synchronized(surfaceHolder){
+					//update
+					this.gameView.update();
+					//render
+					this.gameView.render(canvas);
+				}
+			}finally{
+				//in case of an exception so that the surface is not left in an inconsistent state
+				if(canvas != null){
+					surfaceHolder.unlockCanvasAndPost(canvas);
+				}
+			}
 			tickCount++;
-			//update
-			//render
+			
 		}
 		Log.d(TAG, "Game loop executed " + tickCount + " times!");
 	}
