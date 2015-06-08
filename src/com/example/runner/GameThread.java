@@ -30,7 +30,6 @@ class GameThread extends Thread{
 		long tickCount = 0L;
 		Log.d(TAG, "Starting game loop");
 		while(running){
-			Log.d(TAG, "Started game loop");
 			canvas = null;
 			try{
 				canvas = this.surfaceHolder.lockCanvas();
